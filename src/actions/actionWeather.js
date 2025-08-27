@@ -1,35 +1,35 @@
 import {api_key, base_url} from "../utils/constans.js";
 
-export const GET_WEATHER = 'GET_WEATHER';
+export const SET_WEATHER = 'SET_WEATHER';
+export const SET_MESSAGE = 'SET_MESSAGE';
 
-
-export const setWeather = (weatherData) => ({
-    type: GET_WEATHER,
-    payload: weatherData
+export const setWeather = (weather) => ({
+    type: SET_WEATHER,
+    payload: weather,
 });
 
-export const getWeatherInfo = (city) => {
-    return dispatch => {
+export const setMessage = (message) => ({
+    type: SET_MESSAGE,
+    payload: message,
+});
+
+export const fetchWeather = (city) => {
+    return (dispatch) => {
         fetch(`${base_url}?q=${city}&appid=${api_key}&units=metric`)
             .then(res => res.json())
             .then(data => {
-                if (data.cod !== 200) {
-                    throw new Error(data.message);
-                }
-                const weatherInfo = {
+                dispatch(setWeather({
                     country: data.sys.country,
-                    city: data.city,
+                    city: data.name,
                     temp: data.main.temp,
                     pressure: data.main.pressure,
                     sunset: (new Date(data.sys.sunset * 1000)).toLocaleTimeString()
-                }
-                dispatch(setWeather(weatherInfo));
+                }));
+                dispatch(setMessage(''));
             })
-            .catch(err => {
-                alert("Error: " + err.message);
-            });
+            .catch(e => {
+                console.log(e)
+                dispatch(setMessage('Enter correct city name'));
+            })
     }
 }
-
-
-

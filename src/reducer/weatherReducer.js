@@ -1,14 +1,16 @@
-import {GET_WEATHER} from "../actions/actionWeather.js";
+import {SET_MESSAGE, SET_WEATHER} from "../actions/actionWeather.js";
 
-const initialState = {
-    weather: {}
-};
+const defaultState = {
+    weather: {},
+    message: 'Enter city name'
+}
 
-
-export const weatherReducer = (state = initialState, action) => {
+export const weatherReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case GET_WEATHER:
+        case SET_WEATHER:
             return {...state, weather: action.payload}
+        case SET_MESSAGE:
+            return {...state, message: action.payload}
         default:
             return state;
     }
